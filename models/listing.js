@@ -1,4 +1,4 @@
-const mongoose=require(mongoose);
+const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 
 const ListingSchema=new Schema({
@@ -7,8 +7,11 @@ const ListingSchema=new Schema({
         required:true,
     },
     description:String,
+    filename: String,
+    url: String,
     image:{
-        type:String,
+        type:Object,
+        default:"https://unsplash.com/photos/a-pool-of-water-surrounded-by-rocks-and-trees-zo_udYMcaVc",
         set: (v) =>v ===""? "https://unsplash.com/photos/a-pool-of-water-surrounded-by-rocks-and-trees-zo_udYMcaVc":v,
     },
     price:Number,
@@ -18,4 +21,4 @@ const ListingSchema=new Schema({
 });
 
 const Listing=mongoose.model("Listing",ListingSchema);
-module.export=Listing;
+module.exports=Listing;

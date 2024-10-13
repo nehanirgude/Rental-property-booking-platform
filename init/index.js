@@ -22,5 +22,9 @@ main().then((res=>{
     console.log("data was initialize");
   }
 
+  // Listing.find().then((data)=>{
+  //   console.log(data);
+  // })
+
   initDB();
   

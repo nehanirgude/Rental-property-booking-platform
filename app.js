@@ -2,6 +2,11 @@ const express=require("express");
 const app=express();
 const mongoose=require('mongoose');
 const Listing=require("./models/listing.js");
+const path=require("path");
+
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"));
+
 
 main().then((res=>{
   console.log("connection succesfull");
@@ -42,10 +47,9 @@ app.get("/",(req,res)=>{
 
 //index route which will retrive all listings
 
-app.get("/listings",(req,res)=>{
-  Listing.find({}).then((res)=>{
-    console.log(res);
-  });
+app.get("/listings",async(req,res)=>{
+   const allListings = await Listing.find({});
+   res.render("./listings/index.ejs",{allListings});
 });
 
 app.listen(8080,()=>{

@@ -42,11 +42,11 @@ app.get("/",(req,res)=>{
 
 //index route which will retrive all listings
 
-// app.get("/listings",(req,res)=>{
-//   Listing.find({}).then((res)=>{
-//     console.log(res);
-//   });
-// });
+app.get("/listings",(req,res)=>{
+  Listing.find({}).then((res)=>{
+    console.log(res);
+  });
+});
 
 app.listen(8080,()=>{
     console.log("app is listening to port 8080");

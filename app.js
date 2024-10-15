@@ -3,11 +3,18 @@ const app=express();
 const mongoose=require('mongoose');
 const Listing=require("./models/listing.js");
 const path=require("path");
-app.use(express.json());
+// app.use(express.json());
+const methodOverride=require("method-override");
+const ejsMate=require("ejs-mate");
 
-app.set("view engine","ejs");
-app.set("views",path.join(__dirname,"views"));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
+// use ejs-locals for all ejs templates:
+app.engine('ejs', ejsMate);
+//to use static files like css 
+app.use(express.static(path.join(__dirname,"/public")));
 
 
 main().then((res=>{
@@ -71,6 +78,8 @@ app.post("/listings/listings", async (req, res) => {
   // Further processing...
 });
 
+
+
 // app.post("/listings",async(req,res)=>{
 //   // let {title,description,image,price,country,location} =req.body;
 
@@ -85,6 +94,31 @@ app.get("/listings/:id",async(req,res)=>{
   let {id}=req.params;
   const listing =await Listing.findById(id);
   res.render("./listings/show.ejs",{listing});
+});
+
+//edit route
+
+app.get("/listings/:id/edit",async(req,res)=>{
+  let {id}=req.params;
+  const listing =await Listing.findById(id);
+  res.render("./listings/edit.ejs",{listing});
+});
+
+//update route
+
+app.put("/listings/:id", async (req, res) => {
+  let { id } = req.params;
+  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  res.redirect(`/listings/${id}`);
+});
+
+//delete route
+
+app.delete("/listings/:id", async (req, res) => {
+  let { id } = req.params;
+  let deletedListing = await Listing.findByIdAndDelete(id);
+  console.log(deletedListing);
+  res.redirect("/listings");
 });
 
 

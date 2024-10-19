@@ -10,6 +10,7 @@ const ejsMate=require("ejs-mate");
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 app.use(methodOverride("_method"));
 // use ejs-locals for all ejs templates:
 app.engine('ejs', ejsMate);
@@ -49,86 +50,141 @@ await mongoose.connect('mongodb://localhost:27017/wanderlust');
 // });
 
 
-app.get("/",(req,res)=>{
-  res.send("root is working");
-});
-
-
-//index route which will retrive all listings
-
-app.get("/listings",async(req,res)=>{
-   const allListings = await Listing.find({});
-   res.render("./listings/index.ejs",{allListings});
-});
-
-//create or new route
-
-app.get("/listings/new",(req,res)=>{
-  res.render("./listings/new.ejs");
-});
-
-
-//create route
-
-app.post("/listings/listings", async (req, res) => {
-  const newListing= new Listing(req.body.listing);
-  await newListing.save();
-  console.log(req.body);
-  res.redirect("/listings");
-  // Further processing...
-});
-
-
-
-// app.post("/listings",async(req,res)=>{
-//   // let {title,description,image,price,country,location} =req.body;
-
-//   let listing=req.body.listing;
-//   console.log(req.body);
-  
+// app.get("/",(req,res)=>{
+//   res.send("root is working");
 // });
 
-//show route-which will shows all the details of listing
 
-app.get("/listings/:id",async(req,res)=>{
-  let {id}=req.params;
-  const listing =await Listing.findById(id);
-  res.render("./listings/show.ejs",{listing});
+// //index route which will retrive all listings
+
+// app.get("/listings",async(req,res)=>{
+//    const allListings = await Listing.find({});
+//    res.render("./listings/index.ejs",{allListings});
+// });
+
+// //create or new route
+
+// app.get("/listings/new",(req,res)=>{
+//   res.render("./listings/new.ejs");
+// });
+
+
+// //create route
+
+// app.post("/listings/", async (req, res) => {
+//   const newListing= new Listing(req.body.listing);
+//   await newListing.save();
+//   res.redirect("/listings");
+//   // Further processing...
+// });
+
+
+
+// // app.post("/listings",async(req,res)=>{
+// //   // let {title,description,image,price,country,location} =req.body;
+
+// //   let listing=req.body.listing;
+// //   console.log(req.body);
+  
+// // });
+
+// //show route-which will shows all the details of listing
+
+// app.get("/listings/:id",async(req,res)=>{
+//   let {id}=req.params;
+//   const listing =await Listing.findById(id);
+//   res.render("./listings/show.ejs",{listing});
+// });
+
+// //edit route
+
+// app.get("/listings/:id/edit",async(req,res)=>{
+//   let {id}=req.params;
+//   const listing =await Listing.findById(id);
+//   res.render("./listings/edit.ejs",{listing});
+// });
+
+// //update route
+
+// app.put("/listings/:id", async (req, res) => {
+//   let { id } = req.params;
+//   await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+//   res.redirect(`/listings/${id}`);
+// });
+
+// //delete route
+
+// app.delete("/listings/:id", async (req, res) => {
+//   let { id } = req.params;
+//   let deletedListing = await Listing.findByIdAndDelete(id);
+//   console.log(deletedListing);
+//   res.redirect("/listings");
+// });
+
+
+
+
+
+
+
+
+
+// app.listen(8080,()=>{
+//     console.log("app is listening to port 8080");
+// });
+
+//Index Route
+app.get("/listings", async (req, res) => {
+  const allListings = await Listing.find({});
+  res.render("listings/index.ejs", { allListings });
 });
-
-//edit route
-
-app.get("/listings/:id/edit",async(req,res)=>{
-  let {id}=req.params;
-  const listing =await Listing.findById(id);
-  res.render("./listings/edit.ejs",{listing});
+//New Route
+app.get("/listings/new", (req, res) => {
+  res.render("listings/new.ejs");
 });
-
-//update route
-
+//Show Route
+app.get("/listings/:id", async (req, res) => {
+  let { id } = req.params;
+  const listing = await Listing.findById(id);
+  res.render("listings/show.ejs", { listing });
+});
+//Create Route
+app.post("/listings", async (req, res) => {
+  const newListing = new Listing(req.body.listing);
+  await newListing.save();
+  res.redirect("/listings");
+});
+//Edit Route
+app.get("/listings/:id/edit", async (req, res) => {
+  let { id } = req.params;
+  const listing = await Listing.findById(id);
+  res.render("listings/edit.ejs", { listing });
+});
+//Update Route
 app.put("/listings/:id", async (req, res) => {
   let { id } = req.params;
   await Listing.findByIdAndUpdate(id, { ...req.body.listing });
   res.redirect(`/listings/${id}`);
 });
-
-//delete route
-
+//Delete Route
 app.delete("/listings/:id", async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
   console.log(deletedListing);
   res.redirect("/listings");
 });
-
-
-
-
-
-
-
-
-
-app.listen(8080,()=>{
-    console.log("app is listening to port 8080");
+// app.get("/testListing", async (req, res) => {
+//   let sampleListing = new Listing({
+//     title: "My New Villa",
+//     description: "By the beach",
+//     price: 1200,
+//     location: "Calangute, Goa",
+//     country: "India",
+//   });
+//   await sampleListing.save();
+//   console.log("sample was saved");
+//   res.send("successful testing");
+// });
+app.listen(8080, () => {
+  console.log("server is listening to port 8080");
 });

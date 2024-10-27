@@ -6,6 +6,17 @@ const cookieParser=require("cookie-parser");
 const path = require('path');
 // const postRoutes = require(path.join(__dirname, 'routes', 'post.js','users.js'));
 app.use(cookieParser());
+const session=require("express-session");
+const flash=require("connect-flash");
+
+const sessionOptionn ={
+    secret:"mysupersecretstring",
+    resave:false,
+    saveUniinitialized:true,
+};
+
+app.use(session(sessionOption));
+app.use(flash());
 
 
 app.get("/getcoockies",(req,res)=>{

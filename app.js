@@ -7,8 +7,10 @@ const path=require("path");
 const methodOverride=require("method-override");
 const ejsMate=require("ejs-mate");
 const {listingSchema,reviewSchema}=require("./schema.js");
-// const wrapAsync=require("./utils/wrapAsync.js");
+const wrapAsync=require("./utils/wrapAsync.js");
 const Review=require("./models/review.js");
+const session=require("express-session");
+const flash=require("connect-flash");
 
 const listings=require("./routers/listing.js");
 const reviews=require("./routers/review.js");
@@ -39,29 +41,59 @@ await mongoose.connect('mongodb://localhost:27017/wanderlust');
 // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
+const sessionOptions={
+  secret:"mysupersecretstring",
+  resave:false,
+  saveUninitialized:true,
+  cookie:{
+    expires:Date.now()+7*24*60*60*1000,
+    maxAge:7*24*60*60*1000,
+    httpOnly:true,
+  },
+};
+
+app.get("/",(req,res)=>{
+  res.send("hi, i am root");
+});
+
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req,res,next)=>{
+  res.locals.success=req.flash("success");
+  next();
+});
 
 app.use("/listings",listings);
 app.use("/listings/:id/reviews",reviews);
 
-
-const wrapAsync = (fn) => {
-  return (req, res, next) => {
-      Promise.resolve(fn(req, res, next)).catch(next);
-  };
-};
-
+// const wrapAsync = (fn) => {
+//   return (req, res, next) => {
+//       Promise.resolve(fn(req, res, next)).catch(next);
+//   };
+// };
 
 app.all("*",(req,res,next)=>{
   next(new ExpressError(404, "page not found"));
 });
 
-app.use((err,req,res,next)=>{
-  let{statusCode=500,message="something went wrong"}=err;
-  // res.status(statusCode).send(message);
-  res.status(statusCode).render("err.ejs",{err});
- 
+app.use((err, req, res, next) => {
+  let { statusCode = 500, message = "Something went wrong" } = err;
+  res.status(statusCode).render("error.ejs", { message}); // Make sure this points to your error template
+  
 });
 
 app.listen(8080, () => {
   console.log("server is listening to port 8080");
 });
+
+
+
+
+
+
+
+
+
+

@@ -13,6 +13,15 @@
             <%=listing.location %><br>
             <%=listing.country %><br>
           </p>
+          <div class="col-3 btns">
+            <form method="GET" action="/listings/<%= listing._id %>/edit">
+                <button class="btn btns btn-dark edit ">Edit</button>
+            </form>
+        </div>
+        <div class="col-3 btns">
+            <form method="post" action="/listings/<%= listing._id %>?_method=DELETE">
+                <button class="btn btns btn-dark delete ">Delete</button>
+            </form>
         </div>
       </div>
     </div>

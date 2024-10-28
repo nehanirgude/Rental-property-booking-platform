@@ -12,8 +12,8 @@ const ListingSchema=new Schema({
     url: String,
     image:{
         type:Object,
-        default:"https://unsplash.com/photos/a-pool-of-water-surrounded-by-rocks-and-trees-zo_udYMcaVc",
-        set: (v) =>v ===""? "https://unsplash.com/photos/a-pool-of-water-surrounded-by-rocks-and-trees-zo_udYMcaVc":v,
+        default:"https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGhvdGVsc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+        set: (v) =>v ===""?"https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGhvdGVsc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60":v,
     },
     price:Number,
     location:String,
@@ -24,8 +24,17 @@ const ListingSchema=new Schema({
             ref: "Review",
         }
     ],
+    owner: 
+        {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        },
 
+ 
 });
+
+
+
 ListingSchema.post("findOneAndDelete", async (listing) => {
   if(listing) {
     await Review.deleteMany({_id: {$in: listing.review}});

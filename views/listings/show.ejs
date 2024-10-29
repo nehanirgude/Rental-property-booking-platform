@@ -5,26 +5,31 @@
     <h3 class="listing_details offset-3"><%=listing.title %></h3>
     <div class="card listing-card show-card">
       <div class="card col-6 offset-3 " style="width: 18rem;">
-        <img src="<%= listing.image.url %>" class="card-img-top" alt="Listing_image">
+        <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="Listing_image">
         <div class="card-body">
           <p class="card-text">
+            <i>owned by <%=listing.owner.username %> <br></i>
             <%=listing.description %> <br>
             &#8377;<%=listing.price.toLocaleString("en-IN")%><br>
             <%=listing.location %><br>
             <%=listing.country %><br>
           </p>
-          <div class="col-3 btns">
-            <form method="GET" action="/listings/<%= listing._id %>/edit">
-                <button class="btn btns btn-dark edit ">Edit</button>
-            </form>
-        </div>
-        <div class="col-3 btns">
-            <form method="post" action="/listings/<%= listing._id %>?_method=DELETE">
-                <button class="btn btns btn-dark delete ">Delete</button>
-            </form>
-        </div>
+          
       </div>
     </div>
+    <br/>
+    <% if(currUser && currUser._id.equals(listing.owner)) { %>
+    <div class="btns">
+      <form method="GET" action="/listings/<%= listing._id %>/edit">
+          <button class="btn col-1 offset-3 btn-dark edit-btn ">Edit</button>
+      </form>
+  </div>
+  <div class="col-3 btns">
+      <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+          <button class="btn  btn-dark offset-5 delete ">Delete</button>
+      </form>
+  </div>
+<% } %>
     <br>
     <div class="col-8 offset-3 mb-3">
       <hr>

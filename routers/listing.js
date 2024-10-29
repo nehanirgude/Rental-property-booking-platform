@@ -33,7 +33,7 @@ router.get("/", wrapAsync(async (req, res) => {
   //New Route
   router.get("/new",isLoggedIn,(req, res) => {
     
-    res.render("/listing/new.ejs");
+    res.render("./listings/new.ejs");
   });
   //Show Route
   router.get("/:id",wrapAsync(async (req, res) => {

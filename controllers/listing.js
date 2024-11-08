@@ -44,7 +44,7 @@ module.exports.createListing = async (req, res, next) => {
     newListing.geometry=response.body.features[0].geometry;
 
     let savedLIsting=await newListing.save();
-    res.send("done");
+    // res.send("done");
 
     res.redirect("/listings");
 };

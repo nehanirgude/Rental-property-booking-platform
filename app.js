@@ -3,7 +3,7 @@ if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
 
-const dbUrl=process.env.ATLAS_DB
+// const dbUrl=process.env.ATLAS_DB
 console.log(process.env.SECRET);
 
 const express=require("express");
@@ -44,16 +44,19 @@ app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
   
-main().then((res=>{
-  console.log("connection succesfull");
-}))
-.catch(err => console.log(err));
-
-async function main() {
-await mongoose.connect(dbUrl);
-
-// use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+//MOGODB ATLUS Server
+const dbUrl = process.env.ATLAS_URL;
+main()
+.then(() => {
+    console.log("connected to DB")
+})
+.catch(() => {
+    console.log(err);
+});
+async function main() {  
+    await mongoose.connect(dbUrl);  
 }
+
 
 const store = MongoStore.create({
   mongoUrl: dbUrl, 
@@ -100,11 +103,7 @@ app.use("/", users);
 app.use("/listings",listings);
 app.use("/listings/:id/reviews",reviews);
 
-// const wrapAsync = (fn) => {
-//   return (req, res, next) => {
-//       Promise.resolve(fn(req, res, next)).catch(next);
-//   };
-// };
+
 
 app.all("*",(req,res,next)=>{
   next(new ExpressError(404, "page not found"));
@@ -120,8 +119,6 @@ app.listen(8080, () => {
   console.log("server is listening to port 8080");
 });
 
-
-// mongodb+srv://nehanirgude3:eRFdRLGMkxS7j0Lz@cluster0.r4n63.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
 
 

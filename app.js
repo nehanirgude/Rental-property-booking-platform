@@ -3,6 +3,7 @@ if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
 
+const dbUrl=process.env.ATLAS_DB
 console.log(process.env.SECRET);
 
 const express=require("express");
@@ -18,6 +19,7 @@ const wrapAsync=require("./utils/wrapAsync.js");
 const Review=require("./models/review.js");
 const User = require("./models/user.js");
 const session=require("express-session");
+const MongoStore = require('connect-mongo');
 const flash=require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -48,22 +50,28 @@ main().then((res=>{
 .catch(err => console.log(err));
 
 async function main() {
-await mongoose.connect('mongodb://localhost:27017/wanderlust');
+await mongoose.connect(dbUrl);
 
 // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
-const sessionOptions={
-  secret:"mysupersecretstring",
-  resave:false,
-  saveUninitialized:true,
-  cookie:{
-    expires:Date.now()+7*24*60*60*1000,
-    maxAge:7*24*60*60*1000,
-    httpOnly:true,
+const store = MongoStore.create({
+  mongoUrl: dbUrl, 
+  crypto : {
+      secret: process.env.SECRET,
   },
+  touchAfter: 24 * 3600, 
+});
+store.on("error", () => {
+  console.log("ERROR in MONGO SESSION STORE", err);
+});
+const sessionOptions = {
+  store,
+  secret: process.env.SECRET,
+  resave: false, 
+  saveUninitialized: true,
 };
-
+app.use(session(sessionOptions));
 
 
 app.use(session(sessionOptions));
@@ -113,7 +121,7 @@ app.listen(8080, () => {
 });
 
 
-
+// mongodb+srv://nehanirgude3:eRFdRLGMkxS7j0Lz@cluster0.r4n63.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
 
 

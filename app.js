@@ -1,10 +1,7 @@
 if (process.env.NODE_ENV != "production") {
-
-  require("dotenv").config();
+  require('dotenv').config();
 }
-
 const dbUrl=process.env.ATLAS_DB
-console.log(process.env.SECRET);
 
 const express=require("express");
 const app=express();

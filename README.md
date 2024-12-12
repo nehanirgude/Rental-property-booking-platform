@@ -1,4 +1,4 @@
-#Rental Property Booking Platform
+# Rental Property Booking Platform
 -This is a web application built using Node.js, Express, EJS templates, CSS, and Bootstrap. The platform allows users to browse and list rental properties such as hotels, villas, and other types of locations. It also provides user authentication, authorization, and review functionality.
 
 ##Features
